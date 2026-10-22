@@ -2,6 +2,8 @@
 
 一个前后端分离的校园外卖平台，用户 / 管理员双端，覆盖商品、订单、购物车、评论、收藏、充值、数据统计等 12 个业务模块。
 
+> GitHub：https://github.com/gcz66/probable-happiness
+
 ## 技术栈
 
 
