@@ -106,18 +106,18 @@ onMounted(load)
 </script>
 
 <style scoped>
-.detail { max-width: 520px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 70px; }
-.topbar { display: flex; align-items: center; padding: 10px 8px; position: sticky; top: 0; background: #fff; z-index: 5; }
+.detail { max-width: 520px; margin: 0 auto; background: #f7f8fa; min-height: 100vh; padding-bottom: 70px; }
+.topbar { display: flex; align-items: center; padding: 10px 8px; position: sticky; top: 0; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); z-index: 5; }
 .topbar span { font-weight: 600; }
-.detail-img, .img-placeholder { width: 100%; height: 280px; }
+.detail-img, .img-placeholder { width: 100%; height: 300px; }
 .img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; }
-.detail-info { padding: 14px 16px; }
+.detail-info { padding: 16px; background: #fff; border-radius: 18px 18px 0 0; margin-top: -18px; position: relative; }
 .name { font-size: 18px; font-weight: 700; }
 .price-row { display: flex; align-items: center; justify-content: space-between; margin: 8px 0; }
 .price { color: #ff6b6b; font-size: 20px; font-weight: 700; }
 .stock, .sales { color: #999; font-size: 13px; }
 .desc { color: #666; font-size: 14px; line-height: 1.6; }
-.comments { padding: 14px 16px; border-top: 8px solid #f5f6f8; }
+.comments { padding: 14px 16px; background: #fff; margin-top: 10px; }
 .comments h3 { margin-bottom: 10px; }
 .comment-item { border-bottom: 1px solid #f0f0f0; padding: 10px 0; }
 .comment-head { display: flex; align-items: center; gap: 8px; }
