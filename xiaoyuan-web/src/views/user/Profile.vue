@@ -3,10 +3,16 @@
     <div class="header">
       <div class="deco deco-1"></div>
       <div class="deco deco-2"></div>
-      <el-avatar :size="64" :src="user?.avatar" class="avatar">{{ (user?.nickname || user?.username || '用')[0] }}</el-avatar>
-      <div class="info">
-        <div class="name">{{ user?.nickname || user?.username }}</div>
-        <div class="balance"><span class="label">账户余额</span><b>¥{{ user?.balance }}</b></div>
+      <div class="header-top">
+        <el-button text class="home-btn" @click="$router.push('/home')"><el-icon><HomeFilled /></el-icon>首页</el-button>
+        <el-button text class="logout-btn" @click="logout"><el-icon><SwitchButton /></el-icon>退出</el-button>
+      </div>
+      <div class="header-body">
+        <el-avatar :size="64" :src="user?.avatar" class="avatar">{{ (user?.nickname || user?.username || '用')[0] }}</el-avatar>
+        <div class="info">
+          <div class="name">{{ user?.nickname || user?.username }}</div>
+          <div class="balance"><span class="label">账户余额</span><b>¥{{ user?.balance }}</b></div>
+        </div>
       </div>
     </div>
 
@@ -58,7 +64,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { List, ShoppingCart, Star, Location, Wallet, Lock, ArrowRight } from '@element-plus/icons-vue'
+import { List, ShoppingCart, Star, Location, Wallet, Lock, ArrowRight, HomeFilled, SwitchButton } from '@element-plus/icons-vue'
 import { getUserInfo, recharge, changePassword, getOrderList, getFavoriteList, getCartList } from '../../api'
 
 const router = useRouter()
@@ -106,11 +112,15 @@ onMounted(load)
 
 <style scoped>
 .profile { max-width: 520px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 20px; }
-.header { display: flex; align-items: center; gap: 16px; padding: 32px 20px 56px; background: var(--gradient); color: #fff; position: relative; overflow: hidden; }
+.header { padding: 14px 20px 56px; background: var(--gradient); color: #fff; position: relative; overflow: hidden; }
 .deco { position: absolute; border-radius: 50%; background: rgba(255,255,255,.1); }
 .deco-1 { width: 180px; height: 180px; top: -60px; right: -40px; }
 .deco-2 { width: 120px; height: 120px; bottom: -40px; left: -20px; }
-.avatar { border: 3px solid rgba(255,255,255,.8); box-shadow: 0 4px 16px rgba(0,0,0,.2); position: relative; }
+.header-top { display: flex; justify-content: space-between; align-items: center; position: relative; margin-bottom: 14px; }
+.home-btn, .logout-btn { color: #fff; font-size: 13px; display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 16px; background: rgba(255,255,255,.16); }
+.home-btn:hover, .logout-btn:hover { background: rgba(255,255,255,.28); color: #fff; }
+.header-body { display: flex; align-items: center; gap: 16px; position: relative; }
+.avatar { border: 3px solid rgba(255,255,255,.8); box-shadow: 0 4px 16px rgba(0,0,0,.2); }
 .info { position: relative; }
 .name { font-size: 19px; font-weight: 700; }
 .balance { margin-top: 6px; display: flex; align-items: baseline; gap: 8px; }
