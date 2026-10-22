@@ -1,15 +1,17 @@
 <template>
   <div class="addr">
     <div class="topbar"><el-button text @click="$router.back()"><el-icon><ArrowLeft /></el-icon></el-button><span>收货地址</span></div>
-    <div v-for="a in list" :key="a.id" class="addr-item">
-      <div class="addr-main" @click="edit(a)">
-        <div><b>{{ a.consignee }}</b> {{ a.phone }} <el-tag v-if="a.isDefault === 1" size="small" type="danger">默认</el-tag></div>
-        <div class="detail">{{ a.detail }}</div>
+    <div class="addr-list">
+      <div v-for="a in list" :key="a.id" class="addr-item">
+        <div class="addr-main" @click="edit(a)">
+          <div><b>{{ a.consignee }}</b> <span class="phone">{{ a.phone }}</span> <el-tag v-if="a.isDefault === 1" size="small" type="danger" round>默认</el-tag></div>
+          <div class="detail">{{ a.detail }}</div>
+        </div>
+        <el-button size="small" text type="danger" @click="remove(a)">删除</el-button>
       </div>
-      <el-button size="small" text type="danger" @click="remove(a)">删除</el-button>
     </div>
     <el-empty v-if="!list.length" description="暂无地址" />
-    <div style="padding: 16px"><el-button type="danger" style="width:100%" @click="edit(null)">+ 新增地址</el-button></div>
+    <div style="padding: 16px"><el-button type="danger" round style="width:100%" @click="edit(null)">+ 新增地址</el-button></div>
 
     <el-dialog v-model="dialog" :title="form.id ? '编辑地址' : '新增地址'" width="90%" style="max-width:420px">
       <el-form :model="form" label-width="70px">
@@ -56,10 +58,12 @@ onMounted(load)
 </script>
 
 <style scoped>
-.addr { max-width: 520px; margin: 0 auto; background: #fff; min-height: 100vh; }
-.topbar { display: flex; align-items: center; padding: 10px 8px; }
+.addr { max-width: 520px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 20px; }
+.topbar { display: flex; align-items: center; padding: 10px 8px; background: #fff; position: sticky; top: 0; z-index: 5; }
 .topbar span { font-weight: 600; }
-.addr-item { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f0f0f0; }
+.addr-list { padding: 4px 12px; }
+.addr-item { display: flex; align-items: center; padding: 14px; background: #fff; border-radius: var(--card-radius); box-shadow: var(--shadow); margin-bottom: 10px; }
 .addr-main { flex: 1; }
+.phone { color: #999; font-size: 13px; margin-left: 8px; }
 .detail { color: #999; font-size: 13px; margin-top: 4px; }
 </style>

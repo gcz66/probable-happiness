@@ -22,7 +22,7 @@
       <div class="checkout-bar">
         <el-checkbox :model-value="selected.size === items.length" @change="toggleAll">全选</el-checkbox>
         <div class="total">合计：<span class="price">¥{{ totalAmount }}</span></div>
-        <el-button type="danger" :disabled="!selected.size" @click="goCheckout">结算({{ selected.size }})</el-button>
+        <el-button type="danger" round :disabled="!selected.size" @click="goCheckout">结算({{ selected.size }})</el-button>
       </div>
     </template>
   </div>
@@ -72,17 +72,18 @@ onMounted(load)
 </script>
 
 <style scoped>
-.cart { max-width: 520px; margin: 0 auto; background: #fff; min-height: 100vh; padding-bottom: 70px; }
-.topbar { display: flex; align-items: center; padding: 10px 8px; }
+.cart { max-width: 520px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 80px; }
+.topbar { display: flex; align-items: center; padding: 10px 8px; background: #fff; position: sticky; top: 0; z-index: 5; }
 .topbar span { font-weight: 600; }
 .empty { padding-top: 40px; }
-.cart-list { padding: 8px 12px; }
-.cart-item { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
-.cart-img, .img-placeholder { width: 70px; height: 70px; border-radius: 6px; flex-shrink: 0; }
+.cart-list { padding: 4px 12px; }
+.cart-item { display: flex; align-items: center; gap: 10px; padding: 12px; background: #fff; border-radius: var(--card-radius); box-shadow: var(--shadow); margin-bottom: 10px; }
+.cart-img, .img-placeholder { width: 72px; height: 72px; border-radius: 12px; flex-shrink: 0; }
 .img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #999; font-size: 12px; }
 .cart-info { flex: 1; }
-.name { font-size: 15px; }
-.price { color: #ff6b6b; font-weight: 600; margin: 4px 0; }
-.checkout-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 520px; max-width: 100%; background: #fff; border-top: 1px solid #eee; display: flex; align-items: center; gap: 12px; padding: 10px 12px; z-index: 10; }
+.name { font-size: 15px; font-weight: 600; }
+.price { color: #ff6b6b; font-weight: 700; margin: 4px 0; }
+.checkout-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 520px; max-width: 100%; background: #fff; border-radius: 18px 18px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,.08); display: flex; align-items: center; gap: 12px; padding: 12px 16px; z-index: 10; }
 .total { flex: 1; text-align: right; }
+.total .price { font-size: 18px; }
 </style>

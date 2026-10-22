@@ -33,20 +33,24 @@
         <span v-for="t in tabs" :key="t.value" :class="{ active: currentStatus === t.value }" @click="currentStatus = t.value; loadOrders(1)">{{ t.label }}</span>
       </div>
       <div v-if="!orders.length" class="empty"><el-empty description="暂无订单" /></div>
-      <div v-for="o in orders" :key="o.id" class="order-card">
-        <div class="order-head">
-          <span class="order-no">订单号：{{ o.orderNo }}</span>
-          <el-tag :type="statusMap[o.status]?.type">{{ statusMap[o.status]?.label }}</el-tag>
-        </div>
-        <div v-for="it in o.items" :key="it.id" class="order-item">
-          <span>{{ it.productName }} × {{ it.quantity }}</span>
-          <span>¥{{ it.subtotal }}</span>
-        </div>
-        <div class="order-bottom">
-          <span class="amount">共{{ o.totalAmount }}件 合计：¥{{ o.totalAmount }}</span>
-          <el-button v-if="o.status === 0" type="danger" size="small" @click="pay(o)">去支付</el-button>
-          <el-button v-if="o.status === 0" size="small" @click="cancel(o)">取消</el-button>
-          <el-button v-if="o.status === 4" size="small" type="primary" @click="toComment(o)">评价</el-button>
+      <div class="order-list">
+        <div v-for="o in orders" :key="o.id" class="order-card">
+          <div class="order-head">
+            <span class="order-no">订单号：{{ o.orderNo }}</span>
+            <el-tag :type="statusMap[o.status]?.type" round>{{ statusMap[o.status]?.label }}</el-tag>
+          </div>
+          <div v-for="it in o.items" :key="it.id" class="order-item">
+            <span>{{ it.productName }} × {{ it.quantity }}</span>
+            <span>¥{{ it.subtotal }}</span>
+          </div>
+          <div class="order-bottom">
+            <span class="amount">共{{ o.totalAmount }}件 合计：<b class="price">¥{{ o.totalAmount }}</b></span>
+            <span class="btns">
+              <el-button v-if="o.status === 0" type="danger" size="small" round @click="pay(o)">去支付</el-button>
+              <el-button v-if="o.status === 0" size="small" round @click="cancel(o)">取消</el-button>
+              <el-button v-if="o.status === 4" size="small" type="primary" round @click="toComment(o)">评价</el-button>
+            </span>
+          </div>
         </div>
       </div>
       <el-pagination v-if="total > pageSize" background layout="prev, pager, next" :total="total" :page-size="pageSize" :current-page="pageNum" @current-change="loadOrders" style="justify-content:center; margin:12px 0" />
@@ -147,26 +151,29 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.order-page { max-width: 520px; margin: 0 auto; background: #fff; min-height: 100vh; }
-.topbar { display: flex; align-items: center; padding: 10px 8px; }
+.order-page { max-width: 520px; margin: 0 auto; background: var(--bg); min-height: 100vh; padding-bottom: 20px; }
+.topbar { display: flex; align-items: center; padding: 10px 8px; background: #fff; position: sticky; top: 0; z-index: 5; }
 .topbar span { font-weight: 600; }
 .checkout { padding: 8px 14px 20px; }
-.section { margin-bottom: 12px; }
+.checkout h3 { margin: 8px 0 12px; }
+.section { margin-bottom: 12px; background: #fff; border-radius: var(--card-radius); box-shadow: var(--shadow); padding: 14px; }
 .section-title { font-weight: 600; margin-bottom: 8px; color: #333; }
-.addr-item { border: 1px solid #eee; border-radius: 8px; padding: 10px; margin-bottom: 8px; cursor: pointer; }
-.addr-item.active { border-color: #ff6b6b; background: #fff5f5; }
+.addr-item { border: 1px solid #eee; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all .2s; }
+.addr-item.active { border-color: #ff6b6b; background: #fff5f5; box-shadow: 0 2px 8px rgba(255,107,107,.12); }
 .addr-detail { color: #999; font-size: 13px; margin-top: 4px; }
 .co-item { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
 .co-total { text-align: right; margin-top: 8px; font-weight: 600; }
 .price { color: #ff6b6b; font-weight: 700; }
-.tabs { display: flex; gap: 4px; padding: 8px 12px; overflow-x: auto; }
-.tabs span { white-space: nowrap; padding: 5px 12px; border-radius: 14px; font-size: 13px; cursor: pointer; color: #666; }
-.tabs span.active { background: #ff6b6b; color: #fff; }
+.tabs { display: flex; gap: 8px; padding: 8px 12px; overflow-x: auto; background: #fff; position: sticky; top: 44px; z-index: 4; }
+.tabs span { white-space: nowrap; padding: 6px 14px; border-radius: 16px; font-size: 13px; cursor: pointer; color: #666; background: var(--bg); transition: all .2s; }
+.tabs span.active { background: var(--gradient); color: #fff; font-weight: 600; }
 .empty { padding: 30px 0; }
-.order-card { margin: 8px 12px; border: 1px solid #eee; border-radius: 8px; padding: 12px; }
+.order-list { padding: 4px 12px; }
+.order-card { margin-bottom: 10px; background: #fff; border-radius: var(--card-radius); box-shadow: var(--shadow); padding: 14px; }
 .order-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .order-no { font-size: 12px; color: #999; }
 .order-item { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; }
-.order-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; border-top: 1px dashed #eee; padding-top: 8px; }
+.order-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; border-top: 1px dashed #eee; padding-top: 10px; }
+.btns { display: flex; gap: 8px; }
 .amount { color: #666; font-size: 13px; }
 </style>
