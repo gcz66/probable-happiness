@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyuan.mapper.AdminMapper">
+
+    <sql id="baseCols">
+        id, username, password, real_name, role, status, create_time
+    </sql>
+
+    <select id="selectById" resultType="Admin">
+        SELECT <include refid="baseCols"/> FROM `admin` WHERE id = #{id}
+    </select>
+
+    <select id="selectByUsername" resultType="Admin">
+        SELECT <include refid="baseCols"/> FROM `admin` WHERE username = #{username}
+    </select>
+
+    <insert id="insert" parameterType="Admin" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `admin` (username, password, real_name, role, status)
+        VALUES (#{username}, #{password}, #{realName}, #{role}, #{status})
+    </insert>
+
+    <update id="update" parameterType="Admin">
+        UPDATE `admin`
+        <set>
+            <if test="password != null">password = #{password},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM `admin` WHERE id = #{id}
+    </delete>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM `admin`
+    </select>
+
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyuan.mapper.AddressMapper">
+
+    <select id="selectById" resultType="Address">
+        SELECT id, user_id, consignee, phone, detail, is_default, create_time FROM address WHERE id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultType="Address">
+        SELECT id, user_id, consignee, phone, detail, is_default, create_time
+        FROM address WHERE user_id = #{userId}
+        ORDER BY is_default DESC, id ASC
+    </select>
+
+    <insert id="insert" parameterType="Address" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO address (user_id, consignee, phone, detail, is_default)
+        VALUES (#{userId}, #{consignee}, #{phone}, #{detail}, #{isDefault})
+    </insert>
+
+    <update id="update" parameterType="Address">
+        UPDATE address
+        <set>
+            <if test="consignee != null">consignee = #{consignee},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="isDefault != null">is_default = #{isDefault},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM address WHERE id = #{id}
+    </delete>
+
+    <update id="clearDefault">
+        UPDATE address SET is_default = 0 WHERE user_id = #{userId}
+    </update>
+
+</mapper>

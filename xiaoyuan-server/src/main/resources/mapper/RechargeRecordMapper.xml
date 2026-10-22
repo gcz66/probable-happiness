@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyuan.mapper.RechargeRecordMapper">
+
+    <select id="selectById" resultType="RechargeRecord">
+        SELECT id, order_no, user_id, amount, type, balance_after, remark, create_time
+        FROM recharge_record WHERE id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultType="RechargeRecord">
+        SELECT id, order_no, user_id, amount, type, balance_after, remark, create_time
+        FROM recharge_record WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectAll" resultType="RechargeRecord">
+        SELECT id, order_no, user_id, amount, type, balance_after, remark, create_time
+        FROM recharge_record ORDER BY create_time DESC
+    </select>
+
+    <insert id="insert" parameterType="RechargeRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO recharge_record (order_no, user_id, amount, type, balance_after, remark)
+        VALUES (#{orderNo}, #{userId}, #{amount}, #{type}, #{balanceAfter}, #{remark})
+    </insert>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM recharge_record
+    </select>
+
+    <select id="sumRecharge" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(amount), 0) FROM recharge_record WHERE type = 1
+    </select>
+
+</mapper>

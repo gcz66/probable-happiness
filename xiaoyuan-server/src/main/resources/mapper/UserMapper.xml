@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyuan.mapper.UserMapper">
+
+    <sql id="baseCols">
+        id, username, password, nickname, avatar, phone, balance, status, create_time, update_time
+    </sql>
+
+    <select id="selectById" resultType="User">
+        SELECT <include refid="baseCols"/> FROM `user` WHERE id = #{id}
+    </select>
+
+    <select id="selectByUsername" resultType="User">
+        SELECT <include refid="baseCols"/> FROM `user` WHERE username = #{username}
+    </select>
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user` (username, password, nickname, avatar, phone, balance, status)
+        VALUES (#{username}, #{password}, #{nickname}, #{avatar}, #{phone}, #{balance}, #{status})
+    </insert>
+
+    <update id="update" parameterType="User">
+        UPDATE `user`
+        <set>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM `user` WHERE id = #{id}
+    </delete>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM `user`
+    </select>
+
+    <update id="updateBalance">
+        UPDATE `user` SET balance = #{newBalance} WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE `user` SET status = #{status} WHERE id = #{id}
+    </update>
+
+</mapper>

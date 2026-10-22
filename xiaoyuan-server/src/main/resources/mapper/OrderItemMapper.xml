@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyuan.mapper.OrderItemMapper">
+
+    <select id="selectByOrderId" resultType="OrderItem">
+        SELECT id, order_id, product_id, product_name, product_image, price, quantity, subtotal
+        FROM order_item WHERE order_id = #{orderId}
+    </select>
+
+    <select id="selectByOrderIds" resultType="OrderItem">
+        SELECT id, order_id, product_id, product_name, product_image, price, quantity, subtotal
+        FROM order_item WHERE order_id IN
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO order_item (order_id, product_id, product_name, product_image, price, quantity, subtotal)
+        VALUES
+        <foreach collection="list" item="it" separator=",">
+            (#{it.orderId}, #{it.productId}, #{it.productName}, #{it.productImage},
+             #{it.price}, #{it.quantity}, #{it.subtotal})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByOrderId">
+        DELETE FROM order_item WHERE order_id = #{orderId}
+    </delete>
+
+</mapper>

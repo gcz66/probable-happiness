@@ -1,0 +1,447 @@
+{
+  "info": {
+    "_postman_id": "xiaoyuan-campus-food-api",
+    "name": "校园外卖平台 API 测试集",
+    "description": "覆盖用户端与管理端全部模块接口。使用环境变量：{{baseUrl}}=http://localhost:8080，{{token}}=用户token，{{adminToken}}=管理员token。登录请求会自动保存 token（通过 tests 脚本）。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" },
+    { "key": "adminToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. 认证",
+      "item": [
+        {
+          "name": "用户登录",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"test\",\n  \"password\": \"123456\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["var res = pm.response.json();", "pm.environment.set('token', res.data.token);", "pm.test('登录成功', function(){ pm.expect(res.code).to.eql(200); });"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "用户注册",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"123456\",\n  \"nickname\": \"新用户\",\n  \"phone\": \"13700000000\"\n}" }
+          }
+        },
+        {
+          "name": "管理员登录",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/admin/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "admin", "login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["var res = pm.response.json();", "pm.environment.set('adminToken', res.data.token);", "pm.test('管理员登录成功', function(){ pm.expect(res.code).to.eql(200); });"], "type": "text/javascript" } }]
+        }
+      ]
+    },
+    {
+      "name": "2. 商品与分类（公开）",
+      "item": [
+        {
+          "name": "商品分页列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/product/list?pageNum=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "product", "list"], "query": [{ "key": "pageNum", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "商品详情",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/product/detail/1", "host": ["{{baseUrl}}"], "path": ["api", "product", "detail", "1"] }
+          }
+        },
+        {
+          "name": "分类列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/category/list", "host": ["{{baseUrl}}"], "path": ["api", "category", "list"] }
+          }
+        },
+        {
+          "name": "轮播图列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/banner/list", "host": ["{{baseUrl}}"], "path": ["api", "banner", "list"] }
+          }
+        },
+        {
+          "name": "商品评论列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/comment/product/1", "host": ["{{baseUrl}}"], "path": ["api", "comment", "product", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. 用户中心（需用户 token）",
+      "item": [
+        {
+          "name": "我的信息",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/user/info", "host": ["{{baseUrl}}"], "path": ["api", "user", "info"] }
+          }
+        },
+        {
+          "name": "更新个人信息",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/user/update", "host": ["{{baseUrl}}"], "path": ["api", "user", "update"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nickname\": \"测试用户2\",\n  \"phone\": \"13800000000\"\n}" }
+          }
+        },
+        {
+          "name": "修改密码",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/user/password", "host": ["{{baseUrl}}"], "path": ["api", "user", "password"] },
+            "body": { "mode": "raw", "raw": "{\n  \"oldPassword\": \"123456\",\n  \"newPassword\": \"123456\"\n}" }
+          }
+        },
+        {
+          "name": "充值",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/recharge", "host": ["{{baseUrl}}"], "path": ["api", "recharge"] },
+            "body": { "mode": "raw", "raw": "{\n  \"amount\": 50\n}" }
+          }
+        },
+        {
+          "name": "我的充值记录",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/recharge/list", "host": ["{{baseUrl}}"], "path": ["api", "recharge", "list"] }
+          }
+        },
+        {
+          "name": "收货地址列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/address/list", "host": ["{{baseUrl}}"], "path": ["api", "address", "list"] }
+          }
+        },
+        {
+          "name": "新增地址",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/address", "host": ["{{baseUrl}}"], "path": ["api", "address"] },
+            "body": { "mode": "raw", "raw": "{\n  \"consignee\": \"张三\",\n  \"phone\": \"13800000000\",\n  \"detail\": \"南校区3栋501\",\n  \"isDefault\": 1\n}" }
+          }
+        },
+        {
+          "name": "更新地址(改ID)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/address/1", "host": ["{{baseUrl}}"], "path": ["api", "address", "1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"consignee\": \"李四\",\n  \"phone\": \"13800000001\",\n  \"detail\": \"北校区2栋302\"\n}" }
+          }
+        },
+        {
+          "name": "删除地址(改ID)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/address/1", "host": ["{{baseUrl}}"], "path": ["api", "address", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. 购物车（需用户 token）",
+      "item": [
+        {
+          "name": "购物车列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cart/list", "host": ["{{baseUrl}}"], "path": ["api", "cart", "list"] }
+          }
+        },
+        {
+          "name": "加入购物车",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cart/add", "host": ["{{baseUrl}}"], "path": ["api", "cart", "add"] },
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["var res = pm.response.json();", "pm.environment.set('cartId', res.data.id);"], "type": "text/javascript" } }]
+        },
+        {
+          "name": "更新数量(改ID)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cart/{{cartId}}", "host": ["{{baseUrl}}"], "path": ["api", "cart", "{{cartId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 3\n}" }
+          }
+        },
+        {
+          "name": "删除条目(改ID)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cart/{{cartId}}", "host": ["{{baseUrl}}"], "path": ["api", "cart", "{{cartId}}"] }
+          }
+        },
+        {
+          "name": "清空购物车",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/cart/clear", "host": ["{{baseUrl}}"], "path": ["api", "cart", "clear"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. 订单（需用户 token）",
+      "item": [
+        {
+          "name": "下单(购物车结算)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/order/create", "host": ["{{baseUrl}}"], "path": ["api", "order", "create"] },
+            "body": { "mode": "raw", "raw": "{\n  \"addressId\": 1,\n  \"remark\": \"尽快送达\",\n  \"cartIds\": [1]\n}" },
+            "event": [{ "listen": "test", "script": { "exec": ["var res = pm.response.json();", "pm.environment.set('orderId', res.data.id);"], "type": "text/javascript" } }]
+          }
+        },
+        {
+          "name": "余额支付(改ID)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/order/pay/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "order", "pay", "{{orderId}}"] }
+          }
+        },
+        {
+          "name": "我的订单列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/order/list?pageNum=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "order", "list"], "query": [{ "key": "pageNum", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "订单详情(改ID)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/order/detail/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "order", "detail", "{{orderId}}"] }
+          }
+        },
+        {
+          "name": "取消订单(改ID)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/order/cancel/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "order", "cancel", "{{orderId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. 评论与收藏（需用户 token）",
+      "item": [
+        {
+          "name": "发表评论",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/comment", "host": ["{{baseUrl}}"], "path": ["api", "comment"] },
+            "body": { "mode": "raw", "raw": "{\n  \"productId\": 1,\n  \"orderId\": 1,\n  \"content\": \"味道很棒，配送很快！\",\n  \"score\": 5\n}" }
+          }
+        },
+        {
+          "name": "收藏商品",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/favorite/add/1", "host": ["{{baseUrl}}"], "path": ["api", "favorite", "add", "1"] }
+          }
+        },
+        {
+          "name": "我的收藏",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/favorite/list", "host": ["{{baseUrl}}"], "path": ["api", "favorite", "list"] }
+          }
+        },
+        {
+          "name": "取消收藏",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/favorite/cancel/1", "host": ["{{baseUrl}}"], "path": ["api", "favorite", "cancel", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. 管理端（需 admin token）",
+      "item": [
+        {
+          "name": "统计-总览",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/statistics/overview", "host": ["{{baseUrl}}"], "path": ["api", "statistics", "overview"] }
+          }
+        },
+        {
+          "name": "统计-近7日",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/statistics/recent7Days", "host": ["{{baseUrl}}"], "path": ["api", "statistics", "recent7Days"] }
+          }
+        },
+        {
+          "name": "统计-订单状态分布",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/statistics/orderStatus", "host": ["{{baseUrl}}"], "path": ["api", "statistics", "orderStatus"] }
+          }
+        },
+        {
+          "name": "统计-热门商品",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/statistics/hotProducts?topN=5", "host": ["{{baseUrl}}"], "path": ["api", "statistics", "hotProducts"], "query": [{ "key": "topN", "value": "5" }] }
+          }
+        },
+        {
+          "name": "商品管理-列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/product/admin/list?pageNum=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "product", "admin", "list"], "query": [{ "key": "pageNum", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "商品管理-新增",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/product/admin", "host": ["{{baseUrl}}"], "path": ["api", "product", "admin"] },
+            "body": { "mode": "raw", "raw": "{\n  \"categoryId\": 3,\n  \"name\": \"测试汉堡\",\n  \"image\": \"/images/test.jpg\",\n  \"price\": 15.00,\n  \"stock\": 50,\n  \"description\": \"测试商品\",\n  \"status\": 1\n}" }
+          }
+        },
+        {
+          "name": "商品管理-更新(改ID)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/product/admin/1", "host": ["{{baseUrl}}"], "path": ["api", "product", "admin", "1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 13.00,\n  \"stock\": 90\n}" }
+          }
+        },
+        {
+          "name": "商品管理-删除(改ID)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/product/admin/1", "host": ["{{baseUrl}}"], "path": ["api", "product", "admin", "1"] }
+          }
+        },
+        {
+          "name": "分类管理-列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/category/admin/list", "host": ["{{baseUrl}}"], "path": ["api", "category", "admin", "list"] }
+          }
+        },
+        {
+          "name": "分类管理-新增",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/category/admin", "host": ["{{baseUrl}}"], "path": ["api", "category", "admin"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"甜品\",\n  \"sort\": 6,\n  \"status\": 1\n}" }
+          }
+        },
+        {
+          "name": "轮播图管理-列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/banner/admin/list", "host": ["{{baseUrl}}"], "path": ["api", "banner", "admin", "list"] }
+          }
+        },
+        {
+          "name": "订单管理-列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/order/admin/list?pageNum=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "order", "admin", "list"], "query": [{ "key": "pageNum", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+          }
+        },
+        {
+          "name": "订单管理-更新状态(接单/配送/完成)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/order/admin/status/1", "host": ["{{baseUrl}}"], "path": ["api", "order", "admin", "status", "1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": 2\n}" }
+          }
+        },
+        {
+          "name": "评论管理-列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/comment/admin/list", "host": ["{{baseUrl}}"], "path": ["api", "comment", "admin", "list"] }
+          }
+        },
+        {
+          "name": "充值记录-列表",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/recharge/admin/list", "host": ["{{baseUrl}}"], "path": ["api", "recharge", "admin", "list"] }
+          }
+        },
+        {
+          "name": "越权校验-用户访问管理接口(应403)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "{{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/product/admin/list", "host": ["{{baseUrl}}"], "path": ["api", "product", "admin", "list"] },
+            "event": [{ "listen": "test", "script": { "exec": ["var res = pm.response.json();", "pm.test('应返回403', function(){ pm.expect(res.code).to.eql(403); });"], "type": "text/javascript" } }]
+          }
+        }
+      ]
+    }
+  ]
+}

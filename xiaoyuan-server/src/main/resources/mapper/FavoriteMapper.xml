@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyuan.mapper.FavoriteMapper">
+
+    <select id="selectByUserAndProduct" resultType="Favorite">
+        SELECT id, user_id, product_id, create_time FROM favorite
+        WHERE user_id = #{userId} AND product_id = #{productId}
+    </select>
+
+    <select id="selectByUserId" resultType="Favorite">
+        SELECT f.id, f.user_id, f.product_id, f.create_time,
+               p.name AS product_name, p.image AS product_image,
+               p.price AS product_price, c.name AS category_name
+        FROM favorite f
+        LEFT JOIN product p ON f.product_id = p.id
+        LEFT JOIN category c ON p.category_id = c.id
+        WHERE f.user_id = #{userId}
+        ORDER BY f.create_time DESC
+    </select>
+
+    <insert id="insert" parameterType="Favorite" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO favorite (user_id, product_id) VALUES (#{userId}, #{productId})
+    </insert>
+
+    <delete id="deleteByUserAndProduct">
+        DELETE FROM favorite WHERE user_id = #{userId} AND product_id = #{productId}
+    </delete>
+
+    <delete id="deleteByProduct">
+        DELETE FROM favorite WHERE product_id = #{productId}
+    </delete>
+
+    <select id="countByProduct" resultType="long">
+        SELECT COUNT(*) FROM favorite WHERE product_id = #{productId}
+    </select>
+
+</mapper>

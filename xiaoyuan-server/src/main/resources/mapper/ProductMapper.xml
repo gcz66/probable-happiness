@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoyuan.mapper.ProductMapper">
+
+    <sql id="baseCols">
+        p.id, p.category_id, p.name, p.image, p.price, p.stock, p.sales,
+        p.description, p.status, p.create_time, p.update_time,
+        c.name AS category_name
+    </sql>
+
+    <select id="selectById" resultType="Product">
+        SELECT <include refid="baseCols"/>
+        FROM product p LEFT JOIN category c ON p.category_id = c.id
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectPage" resultType="Product">
+        SELECT <include refid="baseCols"/>
+        FROM product p LEFT JOIN category c ON p.category_id = c.id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND p.name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND p.category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                AND p.status = #{status}
+            </if>
+        </where>
+        ORDER BY p.id DESC
+    </select>
+
+    <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (category_id, name, image, price, stock, sales, description, status)
+        VALUES (#{categoryId}, #{name}, #{image}, #{price}, #{stock}, #{sales}, #{description}, #{status})
+    </insert>
+
+    <update id="update" parameterType="Product">
+        UPDATE product
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM product WHERE id = #{id}
+    </delete>
+
+    <update id="deductStock">
+        UPDATE product SET stock = stock - #{quantity}
+        WHERE id = #{id} AND stock &gt;= #{quantity}
+    </update>
+
+    <update id="addSales">
+        UPDATE product SET sales = sales + #{quantity} WHERE id = #{id}
+    </update>
+
+    <update id="addStock">
+        UPDATE product SET stock = stock + #{quantity} WHERE id = #{id}
+    </update>
+
+    <select id="countByCategory" resultType="java.util.Map">
+        SELECT c.name AS category_name, COUNT(p.id) AS num
+        FROM product p LEFT JOIN category c ON p.category_id = c.id
+        GROUP BY p.category_id, c.name
+    </select>
+
+</mapper>
