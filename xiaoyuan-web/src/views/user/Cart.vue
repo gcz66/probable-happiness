@@ -83,7 +83,7 @@ onMounted(load)
 .cart-info { flex: 1; }
 .name { font-size: 15px; font-weight: 600; }
 .price { color: #ff6b6b; font-weight: 700; margin: 4px 0; }
-.checkout-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 520px; max-width: 100%; background: #fff; border-radius: 18px 18px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,.08); display: flex; align-items: center; gap: 12px; padding: 12px 16px; z-index: 10; }
+.checkout-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: calc(520px - 24px); max-width: calc(100% - 24px); margin-bottom: 10px; background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,.12); display: flex; align-items: center; gap: 12px; padding: 12px 16px; z-index: 10; }
 .total { flex: 1; text-align: right; }
 .total .price { font-size: 18px; }
 </style>
